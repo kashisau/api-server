@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var contactApi1 = require('./routes/api/v1.0/contact');
 var geoApi1 = require('./routes/api/v1.0/geo');
+var api1_0 = require('./routes/api-1.0.js');
 var app = express();
 
 // view engine setup
@@ -29,9 +30,10 @@ app.use(require('node-sass-middleware')({
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-app.use('/', index);
-app.use('/v1.0/contact', contactApi1);
-app.use('/v1.0/geo', geoApi1);
+app.use('/1.0/*', api1_0);
+
+//app.use('/v1.0/contact', contactApi1);
+//app.use('/v1.0/geo', geoApi1);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
