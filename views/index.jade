@@ -1,28 +1,4 @@
 extends layout
 block content
-  h1= title
-  .Description
-    h2 Description
-    p
-      :markdown
-        This web server facilitates the dynamic features of [Some website](https://kashis.com.au) allowing data to be exchanged (secured using TLS) back and forth.
-        This would typically be a dumb RESTful API service however I've added in some information that details the API for development purposes.
-    p.Warning
-      strong Please note:
-      |  This web server has been configured to only accept requests from certain hosts. There is a 4096-bit shared secret that facilitates this binding, so please don't be offended if this server doesn't provide the response you're expecting.
-  .Methods
-    h2 Methods (API version 1.0)
-    p Below is a list of methods provided by the webserver, along with links to their detailed pages.
-    ul.MethodList
-      li
-        a(href="/v1.0/contact/").MethodList-methodName /contact
-        p.MethodList-methodDesc
-        | Performs data validation and contact form submission handling.
-      li
-        a(href="/v1.0/geo/").MethodList-methodName /geo
-        p.MethodList-methodDesc
-        | Some tools for approximating distance between Australian suburbs.
-      li
-        a(href="/v1.0/publish/").MethodList-methodName /publish
-        p.MethodList-methodDesc
-        | Handles the publication of the main website using webhooks that tie into the BitBucket repository.
+  -var title = "API home"
+  include:markdown api-home.md

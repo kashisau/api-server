@@ -5,5 +5,3 @@ This class of methods handle the contact form functionality on the [main website
 The following methods apply to the contact class:
 
 #### `/send`
-`POST` - Validates and sends a contact message to the recipient.
-`GET` - Describes the API functionality (i.e., this page).
