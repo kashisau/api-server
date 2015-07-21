@@ -35,7 +35,7 @@ router.get('/*', function(req, res, next) {
         res.type('html');
 
         if (docUrl.length === 1)
-            docType = "class";
+            docType = "module";
 
         res.render('api/1.0/_doc-template/' + docType, { marked : marked, content : markdown, docDates : docFile.dates, prettyDateString : prettyDateString });
     });

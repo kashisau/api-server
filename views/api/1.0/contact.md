@@ -1,7 +1,11 @@
-## Contact class
-This class of methods handle the contact form functionality on the [main website](https://kashis.com.au). The provide the validation and actual messaging features to the form, with some ancillary methods for traffic management and anti-spam precautions.
+# Contact module 1.0
 
-### Methods
-The following methods apply to the contact class:
+Handles the validation of form data and submission of contact forms on the [main website](https://kashis.com.au).
 
-#### `/send`
+## Format
+
+This module will support `JSON` responses only.
+
+## Methods
+
+Below is a list of methods that are made available by the module.
