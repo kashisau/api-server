@@ -9,11 +9,18 @@ See the [API home](../) page for more information.
 
 These modules are currently available via the online API.
 
-### [/1.0/contact/](contact/)
-Contact form validation and submission.
+### [Auth](auth/)<sup>[AccessLevel 0](auth/#AccessLevels)</sup>
+Supplies authorisation tokens for the various modules that are available on this server.
 
-### [/1.0/geo/](geo/)
+### [Contact](contact/)<sup>[AccessLevel 1](auth/#AccessLevels)</sup>
+Handles contact form data validation and submission
+
+### [Geo](geo/)<sup>[AccessLevel 2](auth/#AccessLevels)</sup>
 Australian geographic data and services.
 
-### [/1.0/publish](publish/)
+### [Publish](publish/)<sup>[AccessLevel 3](auth/#AccessLevels)</sup>
 Publishing API for the main website.
+
+## Authorisation
+
+Modules apply a level of availability that apply to the 
