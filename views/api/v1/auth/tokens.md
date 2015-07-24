@@ -13,24 +13,24 @@ Used to request a new authentication token got use with API modules. Authenticat
 
 There are no mandatory attributes required to create an authentication token of access level 1. If no post information is supplied, then a new token of access level 1 will be provided.
 
-| Property | Value | Description |
-|----------|-------|-------------|
-| (none)   | -     | -           |
+| Property | Value(s) | Description |
+|----------|----------|-------------|
+| (none)   | -        | -           |
 
 #### Optional attributes
 
 There are three access levels that an authentication token may posses. The following set of attributes must be supplied for access level 2.
 
-| Attribute | Values             | Description                                                                                                                              |
-| --------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| apiKey   | XXXX-XXXX-XXXX-XXXX | The API key that has been issued to identify an individual account  holder. This is merely used to identify the user of the api service. |
+| Attribute | Value(s)             | Description                                                                                                                              |
+| --------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| apiKey    | `<your API key>`     | The API key that has been issued to identify an individual account  holder. This is merely used to identify the user of the api service. |
 
 The highest access level is for authenticated consumers, who must supply both an API key and the correseponding secret key. This will generate an authentication token with access level 3.
 
-| Attribute | Values                          | Description                                                                                                                              |
-| --------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| apiKey    | XXXX-XXXX-XXXX-XXXX              | The API key that has been issued to identify an individual account  holder. This is merely used to identify the user of the api service. |
-| secretKey | ae2b 1fca 5159 49e5 d54f b22b 8ed9 5575 | The secret key that corresponds to the supplied APIKey                                                                                   |
+| Attribute | Value(s)                     | Description                                                                                                                              |
+| --------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| apiKey    | `<your API key>`             | The API key that has been issued to identify an individual account  holder. This is merely used to identify the user of the api service. |
+| secretKey | `<corresponding secret key>` | The secret key that corresponds to the supplied APIKey                                                                                   |
 
 #### Expected response
 
@@ -61,18 +61,17 @@ Retrieves a list of authentication tokens that have been issued by the system. P
 
 #### Required attributes
 
-| Attribute           | Values        | Description                                  |
-| ------------------- | -------------- | -------------------------------------------- |
+| Attribute           | Value(s)                 | Description                                       |
+| ------------------- | ------------------------ | ------------------------------------------------- |
 | authenticationToken | `<authentication token>` | A valid authentication token with access level 3. |
 
 #### Optional attributes
 
-| Attribute | Value(s)                                      | Default | Description                                                                                                                                 |
-| --------- | --------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| count     | 1-1000                                        | 100     | Determines the number of tokens that will be returned.                                                                                      |
-| offset    | ℤ                                             | 0       | The offset (beginning 0) from which to begin the set of results.                                                                            |
-| sortType  | `issue`&#124;`expiry`&#124;`accessLevel`&#124;`apiKey` | `issue` | Results are ordered by these attributes before applying the (optional) count and offset to the set.                                         |
-| sortOrder | `asc`&#124;`desc`                                | `desc`  | Results will be sorted in ascending or descending order based on this attribute before applying the (optional) count and offset to the set. |
+| Attribute | Value(s)                                                      | Default  | Description                                                                                                                                 |
+| --------- | ------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| count     | 1-1000                                                        | 100      | Determines the number of tokens that will be returned.                                                                                      |
+| offset    | ℤ                                                             | 0        | The offset (beginning 0) from which to begin the set of results.                                                                            |
+| sort      | `[-]issued`&#124;`[-]expiry`&#124;`[-]accessLevel`&#124;`[-]apiKey` [,`[-]issued`&#124;`[-]expiry`&#124;`[-]accessLevel`&#124;`[-]apiKey`,...] | `issued` (ascending) | Determines the sort order of the result set, before being (optionally) limited by the count and offset attributes. Sort orders can be supplied in order of preference by separating each property with a comma (`,`). Each sort property may be appended with a unary minus (`-`) to indicate a descending sort order (eg. `sort=-expiry,issue,-apikey`) |
 
 #### Expected response
 
@@ -81,7 +80,7 @@ A list of tokens in use by the API server, both valid and invalid will be return
 ```
 {
   "data": {
-    "authenticationTokens : [
+    "authenticationTokens" : [
       {
         "authenticationToken" : "aa***.*****.****cc",
         "apiKey" : "abcd***********f",
@@ -111,10 +110,39 @@ Note: Please see the [standard errors](../errors) section for details of generic
 
 * `count_invalid` - The supplied `count` attribute was not a valid natural number or out of bounds.
 * `offset_invalid` - The supplied `offset` attribute was out of bounds.
-* `sort_type_invalid` - An unrecognised sort type was requested.
-* `sort_order_invalid` - The `sortOrder` was neither `asc` nor `desc`.
+* `sort_malformed` - The server had difficulty parsing the sort order indicated. Check that the sort follows the specified conventions.
 
 ### `GET` tokens/:authentication-token [AccessLevel 1]
 
-Validates an authentication, returning information about its issue and validity.
+Validates an authentication, returning information about its issue and validity. The server will return details about the token being supplied in the URL (`:authentication-token`), not the authentication token supplied for authorisation.
 
+#### Required attributes
+Note that the token that is being specified in the URL does _not_ need to match the token used to authorise the method call.
+
+| Attribute           | Value(s)                 | Description                                       |
+| ------------------- | ------------------------ | ------------------------------------------------- |
+| authenticationToken | `<authentication token>` | A valid authentication token with access level 1. |
+
+#### Optional attributes
+There are optional attributes for this method.
+
+| Property | Value(s) | Description |
+|----------|----------|-------------|
+| (none)   | -        | -           |
+
+#### Expected response
+Details of the token will be returned regarding its validity.
+```
+{
+  "data": {
+    "status": "expired",
+    "expirySeconds" : -60402
+  }
+}
+```
+
+#### Method-specific errors
+Note: Please see the [standard errors](../errors) section for details of generic API errors.
+
+* `authentication_token_malformed` - A syntax error was present in the URL-supplied authorisation token.
+* `authentication_token_invalid` - The authentication token was not recognised by the system.
