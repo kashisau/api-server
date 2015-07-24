@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var api1_0 = require('./routes/api-1.0.js');
+var apiV1 = require('./routes/api-v1.js');
 var app = express();
 
 // view engine setup
@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.use('/', index);
-app.use('/1.0/*', api1_0);
+app.use('/v1/*', apiV1);
 
 //app.use('/v1.0/contact', contactApi1);
 //app.use('/v1.0/geo', geoApi1);

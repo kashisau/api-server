@@ -11,12 +11,14 @@ var path = require('path');
  */
 router.get('/*', function(req, res, next) {
     var url = req.originalUrl.replace(/\/+$/gi, ""),
-        docUrl = url.substr(url.indexOf('/1.0/') + 5).split('/'),
+        docUrl = url.substr(url.indexOf('/v1/') + 4).split('/'),
         docFile,
         docType = "method";
 
     if (docUrl.length === 0) {
-        var err = new Error("No api documentation found for the specified method (" + url + ")");
+        var err = new Error(
+            "No api documentation found for the specified method (" +
+            url + ")");
         return next(err);
     }
     
@@ -27,7 +29,8 @@ router.get('/*', function(req, res, next) {
     }
     
     fs.readFile(docFile.filePathAbs, 'utf8', function(err, markdown) {
-        var marked = require('marked');
+        var remarkable = require('remarkable'),
+            mdRenderer;
         
         if (err)
             return next(err);
@@ -37,7 +40,20 @@ router.get('/*', function(req, res, next) {
         if (docUrl.length === 1)
             docType = "module";
 
-        res.render('api/1.0/_doc-template/' + docType, { marked : marked, content : markdown, docDates : docFile.dates, prettyDateString : prettyDateString });
+        mdRenderer = new remarkable('full');
+        
+        res.render(
+            'api/v1/_doc-template/' + docType,
+            {
+                mdRenderer : mdRenderer,
+                mdContent : markdown,
+                docData : {
+                    dates : docFile.dates,
+                    sources: docFile.sources
+                },
+                prettyDateString : prettyDateString
+            }
+        );
     });
     
 });
@@ -68,7 +84,7 @@ function apiDocFile(apiDocPath) {
     // Remove the routes directory.
     docPathRel.pop();
     // Add the views directory for this version of the API
-    docPathRel.push('views', 'api', '1.0');
+    docPathRel.push('views', 'api', 'v1');
     
     // If we're at the very root of the API, find a README file.
     if (apiDocPath[0].length === 0)
@@ -84,12 +100,18 @@ function apiDocFile(apiDocPath) {
             modified: fileStats.mtime
         };
     } catch (fileError) {
-        throw new Error("Documentation file not found (looking for " + docFilePathAbs + ").", fileError);
+        throw new Error(
+            "Documentation file not found (looking for " +
+                docFilePathAbs + ").", fileError);
     }
     
     return {
         filePathAbs: docFilePathAbs,
-        dates: docDates
+        dates: docDates,
+        sources: {
+            api: 'javascript:void(0);',
+            doc: 'javascript:void(0);'
+        }
     };
 }
 
@@ -99,16 +121,20 @@ function apiDocFile(apiDocPath) {
  * @return {string} The outputted string.
  */
 function prettyDateString(date) {
-    var meridian = (date.getHours() / 12 < 1) ? "am" : "pm";
+    var meridian = (date.getHours() / 12 < 1) ? "am" : "pm",
+        leadingZeroRegEx = /^([0-9]{1})$/g,
+        leadingZero = function(number) {
+            return number.toString().replace(leadingZeroRegEx, '0$1');
+        };
     return [
             (date.getHours() - 1) % 12 + 1,
-            date.getMinutes()
+            leadingZero(date.getMinutes())
         ].join(":") +
             meridian +
             " " + 
         [
-            date.getDate() + 1,
-            date.getMonth() + 1,
+            leadingZero(date.getDate() + 1),
+            leadingZero(date.getMonth() + 1),
             date.getFullYear()
         ].join("/");
 }

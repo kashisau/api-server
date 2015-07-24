@@ -1,11 +1,11 @@
 # Tokens methods
 ## Auth module
 
-The Tokens method handles the issuing, validation and revocation of authentication tokens that are used by the API server.
+The Tokens method handles the issuing, validation and revocation of authentication tokens that are used by the API server. The API server will track all authentication tokens that have been issued and keep a record of activity for each one.
 
 ## Methods
 
-### `POST tokens` [AccessLevel 0]
+### `POST` tokens [AccessLevel 0]
 
 Used to request a new authentication token got use with API modules. Authentication tokens vary in [access level](../../#Authorisation) depending on the data provided during creation.
 
@@ -23,22 +23,22 @@ There are three access levels that an authentication token may posses. The follo
 
 | Attribute | Values             | Description                                                                                                                              |
 | --------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| API Key   | XXXX-XXXX-XXXX-XXXX | The API key that has been issued to identify an individual account  holder. This is merely used to identify the user of the api service. |
+| apiKey   | XXXX-XXXX-XXXX-XXXX | The API key that has been issued to identify an individual account  holder. This is merely used to identify the user of the api service. |
 
 The highest access level is for authenticated consumers, who must supply both an API key and the correseponding secret key. This will generate an authentication token with access level 3.
 
 | Attribute | Values                          | Description                                                                                                                              |
 | --------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| APIKey    | XXXX-XXXX-XXXX-XXXX              | The API key that has been issued to identify an individual account  holder. This is merely used to identify the user of the api service. |
-| SecretKey | ae2b 1fca 5159 49e5 d54f b22b 8ed9 5575 | The secret key that corresponds to the supplied APIKey                                                                                   |
+| apiKey    | XXXX-XXXX-XXXX-XXXX              | The API key that has been issued to identify an individual account  holder. This is merely used to identify the user of the api service. |
+| secretKey | ae2b 1fca 5159 49e5 d54f b22b 8ed9 5575 | The secret key that corresponds to the supplied APIKey                                                                                   |
 
 #### Expected response
 
-The command will respond with a JWT character string of up no more than 200 characters. This character string must be included in the body of API calls that have an access level of 1 or more.
+The command will respond with a JWT character string of up to 200 characters. This character string must be included in the head of API calls that have an access level of 1 or more.
 
-A list of tokens in use by the API server, both valid and invalid will be returned. They will adhere to the following structure:
+A JSON API compatible response will contain the authentication token.
 
-```
+``` json
 {
   "data": {
     "authenticationToken" : "aaaaa.bbbbb.ccccc",
@@ -56,14 +56,14 @@ Note: Please see the [standard errors](../errors) section for details of generic
 * `secret_key_invalid` - The supplied `SecretKey` does not correspond to the `APIKey` attribute
 * `secret_key_malformed` - The supplied `SecretKey` does not correspond to the `APIKey` attribute
 
-### `GET tokens` [AccessLevel 3]
+### `GET` tokens [AccessLevel 3]
 Retrieves a list of authentication tokens that have been issued by the system. Please note that **whole tokens will not be retrieved**.
 
 #### Required attributes
 
 | Attribute           | Values        | Description                                  |
 | ------------------- | -------------- | -------------------------------------------- |
-| AuthenticationToken | aaaa.bbbb.cccc | An authentication token with access level 3. |
+| authenticationToken | `<authentication token>` | A valid authentication token with access level 3. |
 
 #### Optional attributes
 
@@ -113,3 +113,8 @@ Note: Please see the [standard errors](../errors) section for details of generic
 * `offset_invalid` - The supplied `offset` attribute was out of bounds.
 * `sort_type_invalid` - An unrecognised sort type was requested.
 * `sort_order_invalid` - The `sortOrder` was neither `asc` nor `desc`.
+
+### `GET` tokens/:authentication-token [AccessLevel 1]
+
+Validates an authentication, returning information about its issue and validity.
+

@@ -2,11 +2,15 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/github-markdown.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body.markdown-body
-    block content
+  body
+    div.Documentation.markdown-body
+      block content
   footer
-    div.DocDates
-      span.DocDates-modified Modified 
-        time(datetime=docDates.modified.toISOString())= prettyDateString(docDates.modified)
+    div.DocData
+      span.DocData-modified Modified 
+        time(datetime=docData.dates.modified.toISOString())= prettyDateString(docData.dates.modified)
+      span.DocData-methodSource
+        a(href=docData.sources.api) API source
+      span.DocData-docSource
+        a(href=docData.sources.doc) Document source
