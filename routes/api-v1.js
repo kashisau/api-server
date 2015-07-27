@@ -13,8 +13,9 @@ router.get('/*', function(req, res, next) {
     var url = req.originalUrl.replace(/\/+$/gi, ""),
         docUrl = url.substr(url.indexOf('/v1/') + 4).split('/'),
         docFile,
-        docType = "method";
-
+        docType = "method",
+        apiTarget;
+    
     if (docUrl.length === 0) {
         var err = new Error(
             "No api documentation found for the specified method (" +
@@ -23,6 +24,7 @@ router.get('/*', function(req, res, next) {
     }
     
     try {
+        apiTarget = getApiTarget(req);
         docFile = apiDocFile(docUrl);
     } catch (fileError) {
         return next(fileError);
@@ -57,6 +59,92 @@ router.get('/*', function(req, res, next) {
     });
     
 });
+
+/**
+ * Takes the request from Express and constructs an object that holds data
+ * about the hierarchy leading to the requested feature. The resulting object
+ * can be used to derive all available details of the request from the API
+ * version number to the module, method and optional parameters such as a 
+ * supplied identifier and querystring arguments.
+ * @param {string} url  The complete URL that the client is requesting.
+ * @return {*}  Returns a JSON object that describes the request based on the
+ *              URL of the request.
+ */
+function getApiTarget(req) {
+    var url = req.originalUrl,
+        urlPieces = url.split('/'),
+        urlPieceNo = urlPieces.length,
+        urlPiece,
+        componentNames = ['apiVersion', 'module', 'method', 'identifier'],
+        componentName,
+        component,
+        apiTargetObj = {};
+    
+    //// Remove empty strings & query strings
+    //urlPieces = urlPieces.filter(function (e) {
+    //    if (e[0] === '?') return "";
+    //    if (e.indexOf('?') > 0) return e.split('?')[0]
+    //    return e;
+    //});
+    while (urlPieceNo--) {
+        urlPiece = urlPieces[urlPieceNo];
+
+        // Appended querystring
+        if (urlPiece.indexOf('?') > 0)
+            urlPieces[urlPieceNo] = urlPiece.split('?')[0];
+
+        // Empty string or just a querystring
+        if (urlPiece.length === 0)
+            urlPieces.splice(urlPieceNo, 1);
+    }
+
+    // Gather as much information as possible
+    while (component = urlPieces.shift()) {
+        componentName = componentNames.shift();
+        apiTargetObj[componentName] = component;
+    }
+    
+    // Remove query-string parameters from the identifier (if set)
+    if (apiTargetObj.hasOwnProperty('identifier'))
+        apiTargetObj['identifier'] = apiTargetObj['identifier'].split('?')[0];
+
+    apiTargetObj.attributes = breakdownQueryString(req.query);
+    
+    return apiTargetObj;
+}
+
+/**
+ * Takes the querystring appended to a URL and processes it for attribute key-
+ * value pairs. This will return an JSON object with the number of properties
+ * equal to the number of query string parameters supplied (and bearing the
+ * exact key names in a case-sensitive manner).
+ * @param {*} queryObject   The query object as processed by Express and
+ *                          supplied by the request object.
+ * @return {*}  Returns a JSON object describing each key-value pair in the
+ *              query string.
+ */
+function breakdownQueryString(queryObject) {
+    var key,
+        value,
+        listIndex;
+    
+    for (var key in queryObject) {
+        var value = queryObject[key],
+            listIndex = value.indexOf(',');
+
+        if (value.length === 0) {
+            delete queryObject[key];
+            continue;
+        }
+
+        if ( ! listIndex)
+            continue;
+
+        queryObject[key] = value.split(",");
+    }
+    
+    return queryObject;
+}
 
 /**
  * Converts an API url to a likely path to the corresponding API documentation.

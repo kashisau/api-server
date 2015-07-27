@@ -138,7 +138,7 @@ Details of the token will be returned regarding its validity.
     "status": "expired",
     "expirySeconds" : -60402
   }
-}
+} 
 ```
 
 #### Method-specific errors
