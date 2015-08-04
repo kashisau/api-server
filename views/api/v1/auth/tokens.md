@@ -146,3 +146,43 @@ Note: Please see the [standard errors](../errors) section for details of generic
 
 * `authentication_token_malformed` - A syntax error was present in the URL-supplied authorisation token.
 * `authentication_token_invalid` - The authentication token was not recognised by the system.
+
+### `DELETE` tokens/:authentication-token [AccessLevel 1]
+
+Invalidates an authentication token by storing an invalidation rule in the server. The supplied authentication token will no longer be functional after this method has been called.
+
+#### Required attributes
+An authentication token must be supplied for authorisation.
+
+| Attribute           | Value(s)                 | Description                                                 |
+| ------------------- | ------------------------ | ----------------------------------------------------------- |
+| authenticationToken | `<authentication token>` | A valid authentication token used to authorise the request. |
+
+##### Note
+If an authentication token of access level 1 is supplied, it may only be used invalidate itself. See Optional attributes below for administrative deletion of authenticationS tokens.
+
+#### Optional attributes
+There are optional attributes for this method that override the required attributes. Higher access levels may delete authentication tokens that are non-matching nor share the same API key.
+
+| Property            | Value(s)                 | Description                                                                                                                                                               |
+|---------------------|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| authenticationToken | `<authentication token>` | A valid authentication token with access level 2. This may be used to delete authentication tokens that are created against the same API key.                             |
+| authenticationToken | `<authentication token>` | A valid authentication token with access level 3. This may be used to delete authentication tokens different to the token specified in the request (without restriction). |
+
+#### Expected response
+Details of the token will be returned regarding its new status and a timestamp of its invalidation.
+```
+{
+  "data": {
+    "authenticationToken": "aaaa.bbbb.cccc",
+    "status" : "invalid",
+    "lastActive" : "2015-07-01 12:30:00 +1000"
+  }
+}
+```
+
+#### Method-specific errors
+Note: Please see the [standard errors](../errors) section for details of generic API errors.
+
+* `authentication_token_malformed` - A syntax error was present in the URL-supplied authorisation token.
+* `authentication_token_invalid` - The authentication token was not recognised by the system.
