@@ -1,12 +1,17 @@
 mixin breadcrumbs(breadcrumbsArray, parentLevel)
-  -var parentLevel = parentLevel - 1 || breadcrumbsArray.length;
-  -function relParent(level) { return (level)? "../" + relParent(--level) : ""; }
+  -var parentLevel = parentLevel || breadcrumbsArray.length - 1;
+  -function relParent(retreatLevel) { return (retreatLevel > 0)? "../" + relParent(retreatLevel - 1) : ""; }
   -var path = relParent(parentLevel)
   -var crumb = breadcrumbsArray.shift();
   -if (crumb !== undefined)
-    ul
+    -if (breadcrumbsArray.length === 0)
+      li
+        span.Breadcrumbs-activeCrumb=crumb
+    -else
       li
         a(href=path)=crumb
-        +breadcrumbs(breadcrumbsArray, parentLevel)
-    
-+breadcrumbs(docData.breadcrumbs)
+    +breadcrumbs(breadcrumbsArray, parentLevel-1)
+ul.Breadcrumbs
+  li
+    a(href="/") API Home
+  +breadcrumbs(docData.breadcrumbs)

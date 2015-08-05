@@ -4,14 +4,17 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/github-markdown.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    div.Documentation.markdown-body
+  body.Documentation
+    h1 Website API
+    div.markdown-body
       block content
-  footer
-    div.DocData
-      span.DocData-modified Modified 
-        time(datetime=docData.dates.modified.toISOString())= prettyDateString(docData.dates.modified)
-      span.DocData-methodSource
-        a(href=docData.sources.api) API source
-      span.DocData-docSource
-        a(href=docData.sources.doc) Document source
+    br
+    br
+    footer
+      hr
+      div.DocData
+        span.DocData-modified Modified
+          time(datetime=docData.dates.modified.toISOString())= prettyDateString(docData.dates.modified)
+
+        span.DocData-docSource
+          a(href=docData.sources.doc) Document source

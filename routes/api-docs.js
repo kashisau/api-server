@@ -137,7 +137,8 @@ function getFirstFile(filePaths) {
     var filePath = filePaths.shift(),
         fileStats,
         docDates;
-    
+    var REPO_URL = "https://bitbucket.org/KashmaNiaC/website-api/src/master";
+
     if (filePath === undefined)
         throw new Error('No file could be found that corresponds to the \
             method or module being used.');
@@ -157,8 +158,8 @@ function getFirstFile(filePaths) {
         content: fs.readFileSync(filePath, "utf8"),
         dates: docDates,
         sources: {
-            api: filePath,
-            doc: filePath
+            api: REPO_URL + '/' + filePath,
+            doc: REPO_URL + '/' + filePath
         }
     };
 }
