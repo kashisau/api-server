@@ -1,0 +1,12 @@
+mixin breadcrumbs(breadcrumbsArray, parentLevel)
+  -var parentLevel = parentLevel - 1 || breadcrumbsArray.length;
+  -function relParent(level) { return (level)? "../" + relParent(--level) : ""; }
+  -var path = relParent(parentLevel)
+  -var crumb = breadcrumbsArray.shift();
+  -if (crumb !== undefined)
+    ul
+      li
+        a(href=path)=crumb
+        +breadcrumbs(breadcrumbsArray, parentLevel)
+    
++breadcrumbs(docData.breadcrumbs)

@@ -1,4 +1,5 @@
 extends ../../../documentation
 block content
-  h2 #{apiClass}
+  div.Breadcrumbs
+    include ./api-v1-breadcrumbs
   != mdRenderer.render(mdContent)
