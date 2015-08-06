@@ -1,5 +1,9 @@
 extends ../../../documentation
+include ./api-v1-breadcrumbs_mixin
 block content
-  div.Breadcrumbs
-    include ./api-v1-breadcrumbs
+  nav.Breadcrumbs
+    ul
+      li.Breadcrumbs--home
+        a(href="/") API Home
+      +breadcrumbs(docData.breadcrumbs)
   != mdRenderer.render(mdContent)

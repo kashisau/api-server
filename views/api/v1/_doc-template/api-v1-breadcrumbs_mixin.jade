@@ -1,0 +1,28 @@
+//-
+  This mixin takes an array of breadcrumbs (as supplied by Express middleware
+  api-docs) and produces a series of list items for breadcrumb navigation.
+  Each breadcrumb item is marked up with class information, and all but the
+  terminating node is linked to the parent of the current page.
+  
+  This method uses recursion to traverse an array of breadcrumb objects until
+  it is empty. The initial call to this mixin does not require a second
+  argument (i.e., it is determined automatically).
+mixin breadcrumbs(breadcrumbsArray, parentLevel)
+  -var parentLevel = parentLevel || breadcrumbsArray.length - 1;
+  -var path = function relParent(retreatLevel) { return (retreatLevel > 0)? "../" + relParent(retreatLevel - 1) : ""; }(parentLevel)
+  -var crumb = breadcrumbsArray.shift();
+  -if (crumb !== undefined)
+    -var crumbName = crumb.name;
+    -var crumbFriendlyType = crumb.friendlyType;
+    -var crumbType = crumb.type;
+    -if (breadcrumbsArray.length === 0)
+      li(class="Breadcrumbs-activeCrumb Breadcrumbs--#{ crumbType }")
+        span.Breadcrumbs-crumbType=crumbFriendlyType
+        | : 
+        span.Breadcrumbs-crumbName=crumbName
+    -else
+      li(class="Breadcrumbs--#{ crumbType }")
+        span.Breadcrumbs-crumbType=crumbFriendlyType
+        | : 
+        a(href=path)=crumbName
+    +breadcrumbs(breadcrumbsArray, parentLevel-1)

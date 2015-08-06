@@ -159,7 +159,7 @@ An authentication token must be supplied for authorisation.
 | authenticationToken | `<authentication token>` | A valid authentication token used to authorise the request. |
 
 ##### Note
-If an authentication token of access level 1 is supplied, it may only be used invalidate itself. See Optional attributes below for administrative deletion of authenticationS tokens.
+If an authentication token of access level 1 is supplied, it may only be used invalidate itself. See Optional attributes below for administrative deletion of authentication tokens.
 
 #### Optional attributes
 There are optional attributes for this method that override the required attributes. Higher access levels may delete authentication tokens that are non-matching nor share the same API key.

@@ -77,16 +77,26 @@ function relParent(level) { return (level)? "*" + relParent(--level) : ""; }
  * @returns {Array} Returns an array of nestable bread crumbs.
  */
 function breadcrumbs(apiTarget) {
-    var pathComponents = ['method', 'module', 'apiVersion'],
-        docPath = [];
+    var pathComponents = [ 
+            { type: 'method', friendlyType: "Method" },
+            { type: 'module', friendlyType: "Module" },
+            { type: 'apiVersion', friendlyType: "API Version" }
+        ],
+        crumbs = [];
 
     for (var i = 0, total = pathComponents.length; i < total; i++) {
-        if (apiTarget.hasOwnProperty(pathComponents[i])) {
-            docPath.unshift(apiTarget[pathComponents[i]]);
+        if (apiTarget.hasOwnProperty(pathComponents[i].type)) {
+            crumbs.unshift(
+                {
+                    type: pathComponents[i].type,
+                    friendlyType: pathComponents[i].friendlyType,
+                    name: apiTarget[pathComponents[i].type]
+                }
+            );
         }
     }
     
-    return docPath;
+    return crumbs;
 }
 
 /**
@@ -158,10 +168,27 @@ function getFirstFile(filePaths) {
         content: fs.readFileSync(filePath, "utf8"),
         dates: docDates,
         sources: {
-            api: REPO_URL + '/' + filePath,
-            doc: REPO_URL + '/' + filePath
+            api: REPO_URL + relativeViewPath(filePath),
+            doc: REPO_URL + relativeViewPath(filePath)
         }
     };
+}
+
+/**
+ * Takes an absolute path and reduces it to one that is relative to the Express
+ * application path.
+ * @param {string} fullPath The complete (or absolute) path in the filesystem.
+ * @return {string} Returns a path that is relative to the Express application
+ *                  directory.
+ */
+function relativeViewPath(fullPath) {
+    var applicationPath = path.join(__dirname).split('/');
+    
+    applicationPath.pop();
+//    applicationPath.push('views');
+//    applicationPath.push('api');
+
+    return fullPath.substr(applicationPath.join('/').length);
 }
 
 /**
