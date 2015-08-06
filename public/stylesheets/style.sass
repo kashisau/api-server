@@ -4,8 +4,48 @@ body
   font-size: 16px
 
 .Documentation
-  max-width: 650px
   line-height: 1.75
 
 a
   color: #00B7FF
+
+.Breadcrumbs
+  ul
+    padding: 0
+    margin: 0
+    li
+      display: inline-block
+      margin: 0
+      position: relative
+      min-width: 100px
+      &.Breadcrumbs--home
+        background-color: #e4ebee
+        a
+          display: block
+          padding: 12px 36px 12px 12px
+      .Breadcrumbs-crumbType
+        font-size: 10px
+        line-height: 10px
+        position: absolute
+        bottom: 0px
+        left: 0
+        right: 0
+        padding: 10px 24px 10px 10px
+        background-color: #ff0000
+        color: #ffffff
+        font-weight: bold
+        transition: bottom 200ms ease-out, opacity 100ms ease-out
+        z-index: 5
+        opacity: 0
+      .Breadcrumbs-crumbName
+        display: block
+        position: relative
+        padding: 12px 36px 12px 12px
+        z-index: 10
+        background-color: #F3FbFF
+      &:hover
+        .Breadcrumbs-crumbType
+          bottom: -30px
+          opacity: 1
+        
+        

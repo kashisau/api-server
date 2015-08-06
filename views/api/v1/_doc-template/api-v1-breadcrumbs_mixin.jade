@@ -16,13 +16,11 @@ mixin breadcrumbs(breadcrumbsArray, parentLevel)
     -var crumbFriendlyType = crumb.friendlyType;
     -var crumbType = crumb.type;
     -if (breadcrumbsArray.length === 0)
-      li(class="Breadcrumbs-activeCrumb Breadcrumbs--#{ crumbType }")
+      li(class="Breadcrumbs--activeCrumb Breadcrumbs--#{ crumbType }")
         span.Breadcrumbs-crumbType=crumbFriendlyType
-        | : 
         span.Breadcrumbs-crumbName=crumbName
     -else
       li(class="Breadcrumbs--#{ crumbType }")
         span.Breadcrumbs-crumbType=crumbFriendlyType
-        | : 
-        a(href=path)=crumbName
+        a(href=path).Breadcrumbs-crumbName=crumbName
     +breadcrumbs(breadcrumbsArray, parentLevel-1)

@@ -3,7 +3,7 @@ include ./api-v1-breadcrumbs_mixin
 block content
   nav.Breadcrumbs
     ul
-      li.Breadcrumbs--home
+      li.Breadcrumbs-crumbName.Breadcrumbs--home
         a(href="/") API Home
       +breadcrumbs(docData.breadcrumbs)
   != mdRenderer.render(mdContent)
