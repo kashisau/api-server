@@ -8,6 +8,8 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var apiTarget = require('./routes/api-target.js');
 var apiDocs = require('./routes/api-docs.js');
+
+var authModule = require('./routes/api/v1/auth.js');
 var app = express();
 
 // view engine setup
@@ -30,8 +32,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.use('/', index);
-app.use('/v1/*', apiTarget);
+app.use(apiTarget);
 app.use('/v1/*', apiDocs);
+app.use('/v1/auth/', authModule);
 
 //app.use('/v1.0/contact', contactApi1);
 //app.use('/v1.0/geo', geoApi1);

@@ -25,7 +25,7 @@ var router = express.Router();
  * This method adds the apiTarget object to the request parameter, sending it
  * to onwards to the next router.
  */
-router.get('/*', function(req, res, next) {
+router.use(function(req, res, next) {
     var apiTarget = getApiTarget(req);
     apiTarget.fetchDoc = ! apiTarget.hasOwnProperty('responseFormat');
     
