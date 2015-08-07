@@ -1,22 +1,44 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('mysql');
+var crypto = require('crypto');
+var jwt = require('jsonwebtoken');
+var authModel = require('../../../models/auth.js');
 
 /**
- * POST to tokens
+ * Authentication module routing
+ * 
+ * An Express router that handles requests to the authentication module of the
+ * API. This object uses the authentication model to process requests and acts
+ * largely as a controller.
  */
 router
     .post('/tokens(.xml|.json)?', function(req, res, next) {
         var apiTarget = req.apiTarget,
-            dbConfig = require('../../../auth/modules/auth/config.json').database;
-        //res.json(dbConfig);
-        res.send("Your new authentication token in " + apiTarget.responseFormat + " form.");
+            dbConfig = require('../../../auth/modules/auth/config.json').database,
+            newJwt;
+
+        authModel.createToken(
+            undefined, undefined,  undefined,
+            function(err, tokenString) {
+                if (err) return next(err);
+                res.send({data: { token : tokenString }});
+            }
+        );
     })
     .get('/tokens(.xml|.json)?/:token?', function(req, res, next) {
-        if (req.params.token !== undefined)
+        if (req.params.token !== undefined) {
             res.send("Information specifically relating to your token: " + req.params.token);
-        else
-            res.send("List of tokens.");
+        } else {
+            //res.send("List of tokens.");
+            authModel.validateApiKey(
+                req.headers.apiKey,
+                req.headers.secretKey,
+                function(err, matchingKey) {
+                    if (err) return next(err);
+                    res.json(matchingKey);
+                }
+            );
+        }
     })
     .delete('/tokens(.xml|.json)?/:token', function(req, res, next) {
         res.send("Invalidating YOUR TOKEN");
@@ -39,5 +61,35 @@ function connect_mysql(authFile) {
     return {};
 }
 
+function createJwt(req) {
+    var jwtKey = randomBase64(256),
+        payload = {
+            accessLevel: 0,
+            apiVersion: 1.0
+        },
+        options = {
+            issuer: req.hostname
+        },
+        jwtString;
+
+    jwtString = jwt.sign(payload, jwtKey, options);
+    
+    return {
+        jwt: jwtString,
+        jwtKey: jwtKey 
+    };
+}
+
+/**
+ * Uses the Node.js Cryto module to create a cryptographically-secure random
+ * string of 
+ * @param length
+ * @returns {string}
+ */
+function randomBase64(length) {
+    var randomBytes = crypto.randomBytes(length);
+    
+    return randomBytes.toString('base64');
+};
 
 module.exports = router;

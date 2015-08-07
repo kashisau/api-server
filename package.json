@@ -17,6 +17,7 @@
     "remarkable": "*",
     "highlight": "*",
     "marked": "*",
+    "jsonwebtoken": "*",
     "mysql": "*"
   }
 }
