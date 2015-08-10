@@ -9,7 +9,7 @@ var index = require('./routes/index');
 var apiTarget = require('./routes/api-target.js');
 var apiDocs = require('./routes/api-docs.js');
 
-var authModule = require('./routes/api/v1/auth.js');
+var authModule = require('./routes/api/v1/auth/tokens.js');
 var app = express();
 
 // view engine setup

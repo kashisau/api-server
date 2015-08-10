@@ -5,5 +5,6 @@
     "password" : "password",
     "port" : 3306,
     "database" : "db_name"
-  }
+  },
+  "jwtSigningKey": "<The secret key by which the JWT token is signed & verified.>"
 }

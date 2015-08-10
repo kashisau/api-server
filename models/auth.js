@@ -1,9 +1,11 @@
 var crypto = require('crypto');
 var mysql = require('mysql');
 var jwt = require('jsonwebtoken');
-var tokenEncodeKey = "<some key that will later be dynamic>";
+var credentials = require('../auth/modules/auth/config.json');
+var tokenEncodeKey = credentials.jwtSigningKey;
 
 var DEFAULT_EXPIRY = 7200;
+var KEY_LENGTH = 25;
 
 var authModel = {};
 /**
@@ -60,13 +62,12 @@ authModel.createToken = function(apiKey, apiKeySecret, expiry, callback) {
  *                              params err, result.
  */
 authModel.validateApiKey = function(apiKey, apiKeySecret, callback) {
-    var conn = mysql.createConnection(
-        require('../auth/modules/auth/config.json').database
-    );
+    var conn = mysql.createConnection(credentials.database);
+
     conn.connect();
     conn.query(
         [
-            'SELECT api_key.key, secret',
+            'SELECT api_key.key',
             'FROM api_key',
             'WHERE api_key.key = ?',
             'AND status = "ACTIVE"'
@@ -77,7 +78,7 @@ authModel.validateApiKey = function(apiKey, apiKeySecret, callback) {
             if (rows.length === 0) {
                 var noResultsError = new Error("There were zero rows" +
                     " matching the given API key and secret.");
-                
+                noResultsError.code = "api_key_invalid";
                 return callback(noResultsError);
             }
             // Determine the access level.
@@ -91,5 +92,34 @@ authModel.validateApiKey = function(apiKey, apiKeySecret, callback) {
             return callback(undefined, { accessLevel: accessLevel });
         }
     );
+};
+
+/**
+ * Checks the syntax of the apiKey for correctness, if one is supplied. This
+ * method will unescape any characters before returning the resulting string.
+ * If no value is supplied, a value of undefined is supplied.
+ * @param {string} apiKey   (Optional) an API key to check for syntactical
+ *                          correctness. If no value is supplied then a value
+ *                          of undefined is returned.
+ * @return {string} A string of the supplied apiKey is returned, having been
+ *                  unescaped and validated.
+ * @throws {Error}  Throws an error with name "api_key_malformed" if the API
+ *                  key supplied is not syntactically correct.
+ */
+authModel.validateApiKey = function(apiKey) {
+    if (apiKey === undefined 
+        || !apiKey)
+        return;
+
+    var escapedKey = decodeURI(apiKey),
+        keyLength = escapedKey.length,
+        keyError = new Error("Error with the supplied API key.");
+    
+    if (keyLength === KEY_LENGTH)
+        if (/[a-zA-Z0-9]*/gi)
+            return escapedKey;
+
+    keyError.name = "key_malformed";
+    throw keyError;
 };
 module.exports = authModel;

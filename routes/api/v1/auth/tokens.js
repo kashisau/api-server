@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
-var authModel = require('../../../models/auth.js');
+var authModel = require('../../../../models/auth.js');
 
 /**
  * Authentication module routing
@@ -14,7 +14,6 @@ var authModel = require('../../../models/auth.js');
 router
     .post('/tokens(.xml|.json)?', function(req, res, next) {
         var apiTarget = req.apiTarget,
-            dbConfig = require('../../../auth/modules/auth/config.json').database,
             newJwt;
 
         authModel.createToken(
