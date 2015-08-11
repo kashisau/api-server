@@ -1,5 +1,5 @@
 /**
- * API Target
+ * API Target Express middleware
  * 
  * This module will parse the incoming request to determine the intended
  * destination of the client.

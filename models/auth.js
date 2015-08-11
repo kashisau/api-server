@@ -50,7 +50,7 @@ authModel.createToken = function(apiKey, apiKeySecret, expiry, callback) {
 };
 
 /**
- * Checks that the supplied key 
+ * Checks that the supplied key, secret key pair in order to assess validity.
  * @param {string} apiKey   (Optional) API key to which the authentication
  *                          token should be associated. Supplying this without
  *                          the apiSecretKey will result in a token with

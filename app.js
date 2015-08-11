@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var apiTarget = require('./routes/api-target.js');
+var apiTarget = require('./middlewares/v1/api-target.js');
 var apiDocs = require('./routes/api-docs.js');
 
 var authModule = require('./routes/api/v1/auth/tokens.js');

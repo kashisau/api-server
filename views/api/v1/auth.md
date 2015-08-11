@@ -14,7 +14,7 @@ All tokens have both a default and maximum expiry and once a token is created, t
 
 ## Methods
 
-Each of the methods available for this module are documented in futher detail on their respective pages.
+Each of the methods available for this module are documented in further detail on their respective pages.
 
 ### [Tokens](tokens/)
 

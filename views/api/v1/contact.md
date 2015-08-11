@@ -18,6 +18,12 @@ When calling methods of the Contact module, an authentication token must be supp
 
 ## Methods
 
-Below is a list of methods that are made available by the module.
+Each of the methods available for this module are documented in further detail on their respective pages.
 
-* [`/send`](send/)
+### [Validate](validate/)
+
+Validates the data that will be submitted to a send request.
+
+### [Send](send/)
+
+Used to send a notification to the website admin.

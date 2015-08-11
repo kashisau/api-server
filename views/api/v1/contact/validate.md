@@ -1,12 +1,12 @@
-# Send methods
+# Validate methods
 
 ## Contact module
 
 ## Methods
 
-### `POST` send [AccessLevel 1]
+### `POST` validate [AccessLevel 1]
 
-Used to send an email to the website administrator. The information supplied will be validated before being accepted, and will therefore raise the same errors as the [*`POST` validate*](/v1/contact/validate) method if validation fails.
+A method that will test the data that will be sent using the [`POST` send](../send) method. This allows the consuming application to verify the correctness of the data before sending a notification.
 
 #### Required attributes
 
@@ -26,3 +26,22 @@ There are optional attributes for this method.
 |----------|----------|-------------|
 | (none)   | -        | -           |
 
+#### Expected response
+
+A JSON object supplies feedback on the overall validity of all supplied data (excluding authentication data) as well as assessments of the individual attributes supplied.
+ 
+ ```JSON
+ {
+  "data": {
+    "valid" : false,
+    "senderName" : true,
+    "senderEmail" : "Not a valid email address.",
+    "body" : "Too short"
+  }
+ }
+ ```
+
+#### Method-specific errors
+
+This method is exposed to [authentication errors](/v1/auth/errors) where the authentication information provided cannot be succsfully validated. It may also observe the [general errors](/v1#general-errors) effecting the API.
+ 
