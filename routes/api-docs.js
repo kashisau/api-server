@@ -20,6 +20,8 @@ var fs = require('fs');
 var path = require('path');
 var remarkable = require('remarkable');
 
+var REPO_URL = "https://bitbucket.org/KashiS/website-api/src/master";
+
 /**
  * GET Informational content
  *
@@ -147,7 +149,6 @@ function getFirstFile(filePaths) {
     var filePath = filePaths.shift(),
         fileStats,
         docDates;
-    var REPO_URL = "https://bitbucket.org/KashmaNiaC/website-api/src/master";
 
     if (filePath === undefined)
         throw new Error('No file could be found that corresponds to the \
