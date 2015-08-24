@@ -122,4 +122,25 @@ authModel.validateApiKey = function(apiKey) {
     keyError.name = "key_malformed";
     throw keyError;
 };
+
+/**
+ * Validates a JavaScript Web Token to check for any evidence of tampering or
+ * data manipulation. This method has no return value however will throw one of
+ * several errors if there is an issue with the supplied token.
+ * @param string jwtToken   The JWT, in its portable string format.
+ */
+authModel.validateToken = function(jwtToken) {
+    var tokenError = new Error(),
+        tokenVerification;
+
+    if (typeof(jwtToken) !== "string") {
+        tokenError.message = "The token provided was of type "
+            + typeof(jwtToken) + " (expected string).";
+        tokenError.name = "non_string_token";
+        throw tokenError;
+    }
+    
+    tokenVerification = jwt.verify(jwtToken, tokenEncodeKey);
+
+};
 module.exports = authModel;

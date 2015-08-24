@@ -15,11 +15,29 @@
 
 var express = require('express');
 var router = express.Router();
-
+var authModel = require('../../../models/auth.js');
 
 router.use(
     function(req, res, next) {
-        var jwtString = req.headers;
+        var authToken = req.get('authentication-token'),
+            authError = new Error();
+
+        // Check for JWT
+        if (typeof(authToken) === "undefined") {
+            authError.message = "There was no authentication token provided " +
+                "with this request.";
+            authError.name = "no_authentication_token";
+            
+            return next(authError);
+        }
+        
+        // Validate JWT
+        try {
+            authModel.validateToken(authToken);
+        } catch (jwtError) {
+            //return next(jwtError);
+        }
+        
         next();
     }
 );

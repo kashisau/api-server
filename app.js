@@ -9,7 +9,11 @@ var index = require('./routes/index');
 var apiTarget = require('./middlewares/v1/api-target.js');
 var apiDocs = require('./routes/api-docs.js');
 
-var authModule = require('./routes/api/v1/auth/tokens.js');
+var authMiddleware = require('./middlewares/v1/auth/auth-request.js');
+
+var mAuthTokens = require('./routes/api/v1/auth/tokens.js');
+var mContactValidation = require('./routes/api/v1/contact/validate.js');
+
 var app = express();
 
 // view engine setup
@@ -30,14 +34,32 @@ app.use(require('node-sass-middleware')({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes
-app.use('/', index);
-app.use(apiTarget);
-app.use('/v1/*', apiDocs);
-app.use('/v1/auth/', authModule);
+/*
+ * Routing
+ * 
+ * Routing for this web app is handled in a series of middlewares that cascade
+ * and increase in specificity until a suitable endpoint is found.
+ */
 
-//app.use('/v1.0/contact', contactApi1);
-//app.use('/v1.0/geo', geoApi1);
+// The landing page for the API is handled separately to the rest of the webapp
+app.use('/', index);
+
+// Universal middleware: dissect the URL to determine the target resource.
+app.use(apiTarget);
+
+// Document router: if the request is for documentation, render it (or else
+// onto the next handler).
+app.use('/v1/*', apiDocs);
+
+// Authentication middleware: handles authorisation for any API calls.
+app.use('/v1/*', authMiddleware);
+
+// Auth module router: process token issuance and management. This middleware
+// also handles some errors thrown from the authMiddlware middleware.
+app.use('/v1/auth/', mAuthTokens);
+
+// Contact form data validation router: handles data validation.
+app.use('/v1/contact/*', mContactValidation);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

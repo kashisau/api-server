@@ -12,10 +12,15 @@ var authModel = require('../../../../models/auth.js');
  * largely as a controller.
  */
 router
-    .post('/tokens(.xml|.json)?', function(req, res, next) {
+    .post('/tokens(.xml|.json)?', function(err, req, res, next) {
         var apiTarget = req.apiTarget,
             newJwt;
 
+        if (err) {
+            console.log(err);
+            res.send("Error with authentication");
+        }
+        
         authModel.createToken(
             undefined, undefined,  undefined,
             function(err, tokenString) {
