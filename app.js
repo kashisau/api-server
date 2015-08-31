@@ -12,7 +12,7 @@ var apiDocs = require('./routes/api-docs.js');
 var authMiddleware = require('./middlewares/v1/auth/auth-request.js');
 
 var mAuthTokens = require('./routes/api/v1/auth/tokens.js');
-var mContactValidation = require('./routes/api/v1/contact/validate.js');
+var mContactValidate = require('./routes/api/v1/contact/validate.js');
 
 var app = express();
 
@@ -56,10 +56,10 @@ app.use('/v1/*', authMiddleware);
 
 // Auth module router: process token issuance and management. This middleware
 // also handles some errors thrown from the authMiddlware middleware.
-app.use('/v1/auth/', mAuthTokens);
+app.use('/v1/auth/tokens*', mAuthTokens);
 
 // Contact form data validation router: handles data validation.
-app.use('/v1/contact/*', mContactValidation);
+app.use('/v1/contact/validate*', mContactValidate);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -74,7 +74,11 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
+    if (err.name.substr(0, 10) === "auth_token")
+      res.status(403);
+    else
+      res.status(err.status || 500);
+    
     res.render('error', {
       message: err.message,
       error: err

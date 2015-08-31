@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
  * Handles the contact form submission and sends an email if all the fields are
  * found to have valid data.
  */
-router.post('/send', function(req, res, next) {
+router.post('send', function(req, res, next) {
   var app = req.app,
       emailAddress = require('email-address'),
       user = {

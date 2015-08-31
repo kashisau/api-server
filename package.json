@@ -18,6 +18,8 @@
     "highlight": "*",
     "marked": "*",
     "jsonwebtoken": "*",
-    "mysql": "*"
+    "mysql": "*",
+    "superagent": "*",
+    "expect": "*"
   }
 }

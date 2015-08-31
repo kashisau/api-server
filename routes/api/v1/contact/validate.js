@@ -8,7 +8,7 @@ var authModel = require('../../../../models/auth.js');
  * the data validation for contact form submission.
  */
 router
-    .get('/validate(.xml|.json)?', function(req, res, next) {
+    .post('(.xml|.json)?', function(req, res, next) {
         res.send("Okay.");
     });
 

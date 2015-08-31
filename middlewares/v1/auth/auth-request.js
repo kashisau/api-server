@@ -19,15 +19,15 @@ var authModel = require('../../../models/auth.js');
 
 router.use(
     function(req, res, next) {
-        var authToken = req.get('authentication-token'),
+        var authToken = req.get('authenticationToken'),
             authError = new Error();
 
         // Check for JWT
         if (typeof(authToken) === "undefined") {
             authError.message = "There was no authentication token provided " +
                 "with this request.";
-            authError.name = "no_authentication_token";
-            
+            authError.name = "auth_token_missing";
+
             return next(authError);
         }
         
@@ -35,7 +35,13 @@ router.use(
         try {
             authModel.validateToken(authToken);
         } catch (jwtError) {
-            //return next(jwtError);
+            var authTokenValidationError = new Error('There was an issue ' +
+                'processing the JWT string provided.');
+
+            authTokenValidationError.name = 'auth_token_invalid';
+            authTokenValidationError.innerError = jwtError;
+
+            return next(authTokenValidationError);
         }
         
         next();

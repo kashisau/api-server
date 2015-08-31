@@ -12,14 +12,9 @@ var authModel = require('../../../../models/auth.js');
  * largely as a controller.
  */
 router
-    .post('/tokens(.xml|.json)?', function(err, req, res, next) {
+    .post('(.xml|.json)?', function(req, res, next) {
         var apiTarget = req.apiTarget,
             newJwt;
-
-        if (err) {
-            console.log(err);
-            res.send("Error with authentication");
-        }
         
         authModel.createToken(
             undefined, undefined,  undefined,
@@ -29,7 +24,7 @@ router
             }
         );
     })
-    .get('/tokens(.xml|.json)?/:token?', function(req, res, next) {
+    .get('(.xml|.json)?/:token?', function(req, res, next) {
         if (req.params.token !== undefined) {
             res.send("Information specifically relating to your token: " + req.params.token);
         } else {
@@ -44,7 +39,7 @@ router
             );
         }
     })
-    .delete('/tokens(.xml|.json)?/:token', function(req, res, next) {
+    .delete('(.xml|.json)?/:token', function(req, res, next) {
         res.send("Invalidating YOUR TOKEN");
     });
 
