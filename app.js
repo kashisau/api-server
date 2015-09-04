@@ -54,6 +54,16 @@ app.use('/v1/*', apiDocs);
 // Authentication middleware: handles authorisation for any API calls.
 app.use('/v1/*', authMiddleware);
 
+// If the user is requesting a new token, cancel the error and allow the call.
+app.use(function(err, req, res, next) {
+  if (err) {
+    if (err.name === 'auth_token_missing')
+      return next();
+  }
+
+  return next(err);
+});
+
 // Auth module router: process token issuance and management. This middleware
 // also handles some errors thrown from the authMiddlware middleware.
 app.use('/v1/auth/tokens*', mAuthTokens);
