@@ -19,7 +19,8 @@ var authModel = require('../../../models/auth.js');
 
 router.use(
     function(req, res, next) {
-        var authToken = req.get('authenticationToken'),
+        var authToken = req.get('authenticationToken')
+                || req.get('authentication-token'),
             authError = new Error();
 
         // Check for JWT

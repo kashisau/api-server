@@ -57,8 +57,14 @@ app.use('/v1/*', authMiddleware);
 // If the user is requesting a new token, cancel the error and allow the call.
 app.use(function(err, req, res, next) {
   if (err) {
-    if (err.name === 'auth_token_missing')
-      return next();
+    if (err.name === 'auth_token_missing') {
+      var apiTarget = req.apiTarget;
+
+      if (apiTarget.fetchDoc)
+        return next();
+      if (apiTarget.module === "auth" && apiTarget.method === "tokens")
+        return next();
+    }
   }
 
   return next(err);

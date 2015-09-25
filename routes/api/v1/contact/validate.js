@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var authModel = require('../../../../models/auth.js');
+var contactModel = require('../../../../models/contact.js');
 /**
  * Contact module routing: Validation
  * 
@@ -9,7 +9,11 @@ var authModel = require('../../../../models/auth.js');
  */
 router
     .post('(.xml|.json)?', function(req, res, next) {
-        res.send("Okay.");
+        var submissionInformation = req.body,
+            validationTests = contactModel.validateInput(submissionInformation);
+        res.json({
+            data: validationTests
+        });
     });
 
 module.exports = router;
