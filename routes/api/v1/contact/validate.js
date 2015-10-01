@@ -11,6 +11,7 @@ router
     .post('(.xml|.json)?', function(req, res, next) {
         var submissionInformation = req.body,
             validationTests = contactModel.validateInput(submissionInformation);
+
         res.json({
             data: validationTests
         });

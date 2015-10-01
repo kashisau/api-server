@@ -6,6 +6,7 @@ var tokenEncodeKey = credentials.jwtSigningKey;
 
 var DEFAULT_EXPIRY = 7200;
 var KEY_LENGTH = 25;
+var TOKEN_AUDIENCE = 'https://localhost:3000/';
 
 var authModel = {};
 /**
@@ -27,7 +28,10 @@ var authModel = {};
  */
 authModel.createToken = function(apiKey, apiKeySecret, expiry, callback) {
     var accessLevel = 0,
-        expiry = expiry || DEFAULT_EXPIRY;
+        expiry = expiry || DEFAULT_EXPIRY,
+        currentTime = Date.now(),
+        expiryTime = Date.now() + expiry * 1000;
+
 
     if (apiKey !== undefined)
         authModel.validateApiKey(
@@ -41,6 +45,9 @@ authModel.createToken = function(apiKey, apiKeySecret, expiry, callback) {
     var jwtString = jwt.sign(
         {
             accessLevel: accessLevel,
+            aud: TOKEN_AUDIENCE,
+            iat: currentTime,
+            exp: expiryTime,
             apiKey: apiKey
         },
         tokenEncodeKey

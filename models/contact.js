@@ -24,7 +24,7 @@ contactModel.validateInput = function(inputs) {
     // Check the email field
     fieldTests.email = contactModel.checkEmail(email);
     // Check the body field
-    fieldTests.body = contactModel.checkMessage(body);
+    fieldTests.body = contactModel.checkMessageBody(body);
 
     return fieldTests;
 };
@@ -90,7 +90,7 @@ contactModel.checkEmail = function(email) {
  *              (boolean) test result for each test. This object may be used
  *              to assess overall validity or single out which cases failed.
  */
-contactModel.checkMessage = function(body) {
+contactModel.checkMessageBody = function(body) {
     var MIN_LENGTH = 5,
         MAX_LENGTH = 16536,
         tests = {};
