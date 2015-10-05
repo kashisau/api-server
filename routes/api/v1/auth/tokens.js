@@ -15,11 +15,12 @@ router
     .post('(.xml|.json)?', function(req, res, next) {
         var apiTarget = req.apiTarget,
             newJwt;
-        
+
         authModel.createToken(
             undefined, undefined,  undefined,
             function(err, tokenString) {
                 if (err) return next(err);
+                res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
                 res.send({data: { token : tokenString }});
             }
         );

@@ -20,6 +20,7 @@
     "jsonwebtoken": "*",
     "mysql": "*",
     "superagent": "*",
-    "expect": "*"
+    "expect": "*",
+    "cors": "*"
   }
 }

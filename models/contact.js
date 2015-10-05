@@ -16,7 +16,7 @@ var contactModel = {};
 contactModel.validateInput = function(inputs) {
     var name = inputs.name,
         email = inputs.email,
-        body = inputs.message,
+        body = inputs.body,
         fieldTests = {};
 
     // Check the name field
@@ -102,6 +102,34 @@ contactModel.checkMessageBody = function(body) {
     tests.maxLength = body.length <= MAX_LENGTH;
 
     return tests;
+};
+
+/**
+ * Takes the output of a series of test results and iterates through each of
+ * the components to assess the overall validity. This is a boolean additive
+ * mechanism that short-circuits when a false is found.
+ * @param testResults {{bool[]}}    The test result object as processed by a
+ *                                  model of this application.
+ * @returns boolean Returns true if all the tests are passed, false if not.
+ */
+contactModel.addTestResults = function(testResults) {
+    var testSuite,
+        test;
+
+    for (testSuite in testResults) {
+        if (testResults.hasOwnProperty(testSuite)) {
+            var testSuite = testResults[testSuite];
+            for (test in testSuite){
+                if (testSuite.hasOwnProperty(test)) {
+                    var test = testSuite[test];
+                    if ( ! test)
+                        return false;
+                }
+            }
+        }
+    }
+
+    return true;
 };
 
 module.exports = contactModel;

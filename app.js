@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var cors = require('cors');
 
 var index = require('./routes/index');
 var apiTarget = require('./middlewares/v1/api-target.js');
@@ -13,6 +14,7 @@ var authMiddleware = require('./middlewares/v1/auth/auth-request.js');
 
 var mAuthTokens = require('./routes/api/v1/auth/tokens.js');
 var mContactValidate = require('./routes/api/v1/contact/validate.js');
+var mContactSend = require('./routes/api/v1/contact/send.js');
 
 var app = express();
 
@@ -36,10 +38,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /*
  * Routing
- * 
+ *
  * Routing for this web app is handled in a series of middlewares that cascade
  * and increase in specificity until a suitable endpoint is found.
  */
+
+app.options('*', cors());
 
 // The landing page for the API is handled separately to the rest of the webapp
 app.use('/', index);
@@ -76,7 +80,7 @@ app.use('/v1/auth/tokens*', mAuthTokens);
 
 // Contact form data validation router: handles data validation.
 app.use('/v1/contact/validate*', mContactValidate);
-app.use('/v1/contact/send*', mContactValidate);
+app.use('/v1/contact/send*', mContactSend);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
