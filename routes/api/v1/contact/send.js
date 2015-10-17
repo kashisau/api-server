@@ -15,6 +15,7 @@ router
             testsPassed = contactModel.addTestResults(validationTests);
 
         if ( ! testsPassed) {
+            res.status(400);
             res.json({
                 errors: {
                     id: 'validation',
@@ -27,7 +28,7 @@ router
                     meta: validationTests
                 }
             });
-            next();
+            res.end();
             return;
         }
 
@@ -39,7 +40,7 @@ router
                 replyTo: submissionInformation.email
             }
         });
-        next();
+        res.end();
         return;
     });
 

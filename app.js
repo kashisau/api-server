@@ -24,6 +24,7 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -42,8 +43,6 @@ app.use(express.static(path.join(__dirname, 'public')));
  * Routing for this web app is handled in a series of middlewares that cascade
  * and increase in specificity until a suitable endpoint is found.
  */
-
-app.options('*', cors());
 
 // The landing page for the API is handled separately to the rest of the webapp
 app.use('/', index);
