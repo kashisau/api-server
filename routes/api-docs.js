@@ -117,16 +117,25 @@ function likelyDocFiles(apiTarget) {
         docPath = [],
         docFiles = [];
 
+    // Remove Express.js directory from path
     applicationPath.pop();
-    applicationPath.push('views');
-    applicationPath.push('api');
-    applicationPath.push('');
-    
-    for (var i = 0, total = pathComponents.length; i < total; i++) {
-        if (apiTarget.hasOwnProperty(pathComponents[i])) {
-            docPath.unshift(apiTarget[pathComponents[i]]);
-        }
+
+
+    // Module-specific documentation, re-route to module directory.
+    if (typeof(apiTarget.module) !== "undefined") {
+        applicationPath.push('api-modules');
+        applicationPath.push('');
+
+        docPath.push(apiTarget.apiVersion);
+        docPath.push(apiTarget.module);
+        docPath.push('views');
+        docPath.push(apiTarget.method || apiTarget.module);
+    } else {
+        docPath.push('views');
+        docPath.push('api');
+        docPath.push(apiTarget.apiVersion);
     }
+
     docFiles.push(applicationPath.join('/') + docPath.join('/') + '.md');
     docFiles.push(applicationPath.join('/') + docPath.join('/') + '/README.md');
     docFiles.push(applicationPath.join('/') + docPath.join('/') + '/README');

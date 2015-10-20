@@ -10,11 +10,11 @@ var index = require('./routes/index');
 var apiTarget = require('./middlewares/v1/api-target.js');
 var apiDocs = require('./routes/api-docs.js');
 
-var authMiddleware = require('./middlewares/v1/auth/auth-request.js');
+var authMiddleware = require('./api-modules/v1/auth/middlewares/auth-request.js');
 
-var mAuthTokens = require('./routes/api/v1/auth/tokens.js');
-var mContactValidate = require('./routes/api/v1/contact/validate.js');
-var mContactSend = require('./routes/api/v1/contact/send.js');
+var mAuthTokens = require('./api-modules/v1/auth/routes/tokens.js');
+var mContactValidate = require('./api-modules/v1/contact/routes/validate.js');
+var mContactSend = require('./api-modules/v1/contact/routes/send.js');
 
 var app = express();
 
