@@ -15,8 +15,8 @@ Supplies authorisation tokens for the various modules that are available on this
 ### [Contact](contact/)
 Handles contact form data validation and submission
 
-### [Geo](geo/)
-Australian geographic data and services.
+### [Portfolio](portfolio/)
+Provides access to portfolio content for Kashi's Website.
 
 ### [Publish](publish/)
 Publishing API for the main website.
