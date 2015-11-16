@@ -34,7 +34,7 @@ router.get('/*', function(req, res, next) {
     
     // See if the API target is requesting the documentation, if not: onwards!
     if ( ! apiTarget.fetchDoc) return next();
-
+    
     docFile = getFirstFile(
         likelyDocFiles(req.apiTarget)
     );
@@ -115,7 +115,8 @@ function likelyDocFiles(apiTarget) {
     var pathComponents = ['method', 'module', 'apiVersion'],
         applicationPath = path.join(__dirname).split('/'),
         docPath = [],
-        docFiles = [];
+        docFiles = [],
+        noEmptyFilter = function(el) { return el; };
 
     // Remove Express.js directory from path
     applicationPath.pop();
@@ -135,10 +136,15 @@ function likelyDocFiles(apiTarget) {
         docPath.push('api');
         docPath.push(apiTarget.apiVersion);
     }
+    
+    applicationPath = applicationPath.filter(noEmptyFilter);
+    if (process.platform!=="win32") applicationPath.unshift("");
 
-    docFiles.push(applicationPath.join('/') + docPath.join('/') + '.md');
-    docFiles.push(applicationPath.join('/') + docPath.join('/') + '/README.md');
-    docFiles.push(applicationPath.join('/') + docPath.join('/') + '/README');
+    docPath = docPath.filter(noEmptyFilter);
+
+    docFiles.push(applicationPath.concat(docPath).join('/') + '.md');
+    docFiles.push(applicationPath.concat(docPath).join('/') + '/README.md');
+    docFiles.push(applicationPath.concat(docPath).join('/') + '/README');
     
     return docFiles;
 }
@@ -160,8 +166,8 @@ function getFirstFile(filePaths) {
         docDates;
 
     if (filePath === undefined)
-        throw new Error('No file could be found that corresponds to the \
-            method or module being used.');
+        throw new Error('No file could be found that corresponds to the ' +
+            'method or module being used.');
     try {
         fileStats = fs.lstatSync(filePath);
         if (!fileStats.isFile())
