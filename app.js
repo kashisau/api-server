@@ -15,6 +15,7 @@ var authMiddleware = require('./api-modules/v1/auth/middlewares/auth-request.js'
 var mAuthTokens = require('./api-modules/v1/auth/routes/tokens.js');
 var mContactValidate = require('./api-modules/v1/contact/routes/validate.js');
 var mContactSend = require('./api-modules/v1/contact/routes/send.js');
+var mPortfolioWorks = require('./api-modules/v1/portfolio/routes/works.js');
 
 var app = express();
 
@@ -80,6 +81,9 @@ app.use('/v1/auth/tokens*', mAuthTokens);
 // Contact form data validation router: handles data validation.
 app.use('/v1/contact/validate*', mContactValidate);
 app.use('/v1/contact/send*', mContactSend);
+
+// Portfolio module router: works info retrieval
+app.use('/v1/portfolio/works*', mPortfolioWorks);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
