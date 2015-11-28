@@ -21,6 +21,9 @@
     "mysql": "*",
     "superagent": "*",
     "expect": "*",
-    "cors": "*"
+    "cors": "*",
+    "should": "*",
+    "mocha": "*",
+    "supertest": "*"
   }
 }
