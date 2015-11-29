@@ -15,3 +15,7 @@ var should = require('should');
 describe("Token creation with various AccessLevels", function (done) {
     require('./tokens/creation.js');
 });
+
+describe("Error reporting with invalid credentials", function (done) {
+        require('./tokens/invalid-credentials.js');
+    });

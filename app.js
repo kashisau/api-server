@@ -31,10 +31,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(require('node-sass-middleware')({
-  src: path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
-  indentedSyntax: true,
-  sourceMap: true
+    src: path.join(__dirname, 'public'),
+    dest: path.join(__dirname, 'public'),
+    indentedSyntax: true,
+    sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -59,19 +59,18 @@ app.use('/v1/*', apiDocs);
 app.use('/v1/*', authMiddleware);
 
 // If the user is requesting a new token, cancel the error and allow the call.
-app.use(function(err, req, res, next) {
-  if (err) {
-    if (err.name === 'auth_token_missing') {
-      var apiTarget = req.apiTarget;
-
-      if (apiTarget.fetchDoc)
-        return next();
-      if (apiTarget.module === "auth" && apiTarget.method === "tokens")
-        return next();
+app.use(
+    function(err, req, res, next) {
+        if (err) {
+            if (err.name === 'auth_token_missing') {
+                var apiTarget = req.apiTarget;
+                if (apiTarget.fetchDoc)
+                    return next();
+                if (apiTarget.module === "auth" && apiTarget.method === "tokens")
+                    return next();
+        }
     }
-  }
-
-  return next(err);
+    return next(err);
 });
 
 // Auth module router: process token issuance and management. This middleware
@@ -87,9 +86,9 @@ app.use('/v1/portfolio/works*', mPortfolioWorks);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handlers
@@ -97,28 +96,34 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    if (err.name.substr(0, 10) === "auth_token")
-      res.status(403);
-    else
-      res.status(err.status || 500);
-    
-    res.render('error', {
-      message: err.message,
-      error: err
+    app.use(function(err, req, res, next) {
+        var statusCode = err.httpStatus || 500,
+            module = err.module || 'server-api';
+            
+        res
+            .status(statusCode)
+            .set('Content-type', 'application/vnd.api+json')
+            .send(
+                JSON.stringify({
+                    "errors": [{
+                        module: module,
+                        name: err.code,
+                        message: err.message
+                    }]
+                })
+            )
+            .end();
     });
-  });
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
-});
-
+// app.use(function(err, req, res, next) {
+//     res.status(err.status || 500);
+//     res.render('error', {
+//         message: err.message,
+//         error: {}
+//     });
+// });
 
 module.exports = app;
