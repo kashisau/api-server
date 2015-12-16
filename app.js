@@ -107,7 +107,7 @@ if (app.get('env') === 'development') {
                 JSON.stringify({
                     "errors": [{
                         module: module,
-                        name: err.code,
+                        name: err.name,
                         message: err.message
                     }]
                 })
