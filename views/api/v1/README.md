@@ -1,13 +1,7 @@
 # API Version v1
-This is the initial API that is available over HTTPS, first published in July, 2015. Modules in this version of the API follow [JSON API](http://jsonapi.org/) conventions.
+This version of the API follows the JSON-API standard described on [jsonapi.org](http://jsonapi.org). For information about module development, see [Module Development](#module-development) below.
 
-API methods are handled by independent modules that have been built on Node.js. This server will parse the `accepts` header of the HTTP request and vary the response accordingly. If you are seeing this page, it is likely that your browser is sending `text/html` as its first preference.
-
-See the [API home](../) page for more information.
-
-## Modules
-
-These modules are currently available via the online API.
+## List of Modules
 
 ### [Auth](auth/)
 Supplies authorisation tokens for the various modules that are available on this server.
@@ -23,4 +17,28 @@ Publishing API for the main website.
 
 ## Authorisation
 
-Modules apply a level of availability that apply to the 
+A common method of authentication is used throughout the API server's endpoints. These are facilitated by the [Authentication module](auth/).
+
+### Authentication Tokens
+
+Authentication for API endpoints is done by means of JWT token strings, as supplied by the [Authentication module](auth/) when requested from the [`auth/tokens`](auth/tokens) endpoint using `HTTP 1.1 POST`. Once a consuming API client receives an valid JWT token string, it should be supplied to each subsequent request using a header `authentication-token: #####`.
+
+## Errors
+
+Errors issued by the API server share a common syntax. API server modules follow [JSONAPI.org](https://jsonapi.org) convention, requests that are met with errors are resolved to JSON objects with the following structure:
+
+``` json
+{
+    "errors": [
+        {
+            "name" : "some_error_name",
+            "description" : "A more detailed description of the error.",
+            "module" : /*[the codename of the module issuing the error. e.g.]*/ "auth"
+        }
+    ]
+}
+```
+
+## Module Development
+
+API server modules all follow a similar pattern for organising their routes, models. 
