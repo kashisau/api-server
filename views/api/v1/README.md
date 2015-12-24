@@ -39,6 +39,19 @@ Errors issued by the API server share a common syntax. API server modules follow
 }
 ```
 
+### General Errors
+
+Each error has a _name_, specifying the exact error encountered which may be used to reference the documentation. Errors will typically be formed using the following combination:
+
+```
+<API module>_<Error>_<Summary>
+```
+This ensures that the source of the error is immediately identifiable.
+
+See also: [Authentication Module Errors](auth/errors)
+
 ## Module Development
 
-API server modules all follow a similar pattern for organising their routes, models. 
+API server modules all follow a similar pattern for organising their routes, models, views, documentation, etc. Modules are inherintly Express.js modules, however they are stored in a folder `./api-modules/<module_name>` so that they can be easily distingued for version control.
+
+There is a [module template on GitHub](https://github.org/kashisau/website-api-module-template) which has more information on the structure of an API module.
