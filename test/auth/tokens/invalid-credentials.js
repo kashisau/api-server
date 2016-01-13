@@ -26,6 +26,21 @@ var api = require('supertest')('http://localhost:3000/'),
             : s
     };
 
+// it("Raise an auth_token_missing error if there was no token supplied during lookup",
+//     function (done) {
+//         api
+//             .get('v1/auth/tokens.json')
+//             .set('Accept', 'application/json')
+//             .set('Content-type', 'application/json')
+//             .expect(400)
+//             .end(function(err, res) {
+//                 var result = res.body;
+//                 should(result.errors[0].name).equal("auth_token_missing")
+//                 done();
+//             });
+//     }
+// );
+
 it("Raise an api_key_malformed error when an API key is syntactically incorrect",
     function (done) {
         api
