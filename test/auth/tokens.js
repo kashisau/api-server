@@ -19,3 +19,7 @@ describe("Token creation with various AccessLevels", function (done) {
 describe("Error reporting with invalid credentials", function (done) {
     require('./tokens/invalid-credentials.js');
 });
+
+describe("Token renewal operations", function (done) {
+    require('./tokens/renewal.js');
+});
