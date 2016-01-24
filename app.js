@@ -75,7 +75,7 @@ app.use(
 
 // Auth module router: process token issuance and management. This middleware
 // also handles some errors thrown from the authMiddlware middleware.
-app.use('/v1/auth/tokens*', mAuthTokens);
+app.use('/v1/auth/tokens', mAuthTokens);
 
 // Contact form data validation router: handles data validation.
 app.use('/v1/contact/validate*', mContactValidate);

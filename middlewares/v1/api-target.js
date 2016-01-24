@@ -95,17 +95,10 @@ function getApiTarget(req) {
 function bestResponse(apiTargetObj, req) {
     if (apiTargetObj.hasOwnProperty('responseFormat'))
         return apiTargetObj;
-
-    switch (req.accepts(['json', 'html', 'xml'])) {
-        case 'json':
-            apiTargetObj.responseFormat = 'json';
-            break;
-        case 'xml':
-            apiTargetObj.responseFormat = 'xml';
-            break;
-        case 'html':
-            break;
-    }
+    
+    apiTargetObj.responseFormat = 'json';
+    if (req.accepts('html'))
+        apiTargetObj.responseFormat = undefined;
 
     return apiTargetObj;
 }
