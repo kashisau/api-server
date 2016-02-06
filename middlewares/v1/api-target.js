@@ -27,7 +27,7 @@ var router = express.Router();
  */
 router.use(function(req, res, next) {
     var apiTarget = getApiTarget(req);
-    apiTarget.fetchDoc = ! apiTarget.hasOwnProperty('responseFormat');
+    apiTarget.fetchDoc = ! apiTarget.responseFormat;
     
     req.apiTarget = apiTarget;
     next();
